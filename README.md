@@ -6,11 +6,13 @@ Overview
 - Memory HTTP server with drivers: SQLite (default) and Supabase (optional), token-auth, /health + /tools/* endpoints
 - tmux dashboard helpers, monitoring, verify scripts, intelligent orchestrator dispatch (log only), structured JSONL logs + per-run reports, run index
 - MCP servers (templates): memory-http bridge + prompt-optimizer (via `@modelcontextprotocol/sdk`) wired in `.codex/config.toml`
+  - Memory MCP reads `claudex/.env` and exposes tools `get_session_id` and `set_session_id` for live session changes. Supabase envs (`SUPABASE_URL`, `SUPABASE_SERVICE_KEY`) are supported by the backend Memory HTTP when using driver `supabase`.
 
 Quick Start
 - Help: `node dist/claudex.cjs --help`
 - Full setup into a host repo: `node dist/claudex.cjs setup` (installs `.codex/config.toml`, copies templates, installs deps, verifies Memory HTTP)
 - Install templates only: `node dist/claudex.cjs init`
+- Change session id: `node dist/claudex.cjs session set sess_demo_123` (persists to `claudex/.env`)
 - Dashboard with memory: `npm run dashboard:with-memory`
 - Monitor: `npm run monitor:with-memory`
 - Verify infra: `npm run verify:orchestration`

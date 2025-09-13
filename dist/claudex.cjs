@@ -211,7 +211,7 @@ function safeJSON(x) { try { return typeof x === 'string' ? JSON.parse(x) : x; }
 
 // -------- CLI commands --------
 function usage() {
-  console.log(`claudex v0.1.0\n\nCommands:\n  init                      Interactive installer (copy templates, add scripts)\n  setup                     Full setup (installer script; MCP + templates + deps)\n  dashboard                 Launch dashboard (tmux if available; starts memory if needed)\n  monitor                   Console live monitor (health/stats)\n  verify                    Verify infrastructure (/health + /tools/get_stats)\n  orchestrate <task> [strategy] [agents] [priority]  Log dispatch + update index\n  serve-memory-http         Start embedded Memory HTTP server\n\nOptions env: MEMORY_HTTP_DRIVER, MEMORY_HTTP_URL, MEMORY_HTTP_TOKEN, MEMORY_DUAL_WRITE, CODEX_SESSION_ID`);
+  console.log(`claudex v0.1.0\n\nCommands:\n  init                      Interactive installer (copy templates, add scripts)\n  setup                     Full setup (installer script; MCP + templates + deps)\n  dashboard                 Launch dashboard (tmux if available; starts memory if needed)\n  monitor                   Console live monitor (health/stats)\n  verify                    Verify infrastructure (/health + /tools/get_stats)\n  orchestrate <task> [strategy] [agents] [priority]  Log dispatch + update index\n  serve-memory-http         Start embedded Memory HTTP server\n  session [show|set <id>]   Show or set session id (persists to claudex/.env)\n\nOptions env: MEMORY_HTTP_DRIVER, MEMORY_HTTP_URL, MEMORY_HTTP_TOKEN, MEMORY_DUAL_WRITE, CODEX_SESSION_ID`);
 }
 
 async function cmdInit() {
@@ -352,6 +352,7 @@ async function fetchJson(u, opts) { const r = await fetch(u, opts); const t = aw
   if (cmd === 'verify') return cmdVerify();
   if (cmd === 'orchestrate') return cmdOrchestrate(args);
   if (cmd === 'serve-memory-http') return startMemoryHttpServer();
+  if (cmd === 'session') return cmdSession(args);
   console.log('[claudex] Unknown command:', cmd); usage();
 })();
 
@@ -359,4 +360,25 @@ async function cmdSetup(){
   const sh = path.join(__dirname, '../scripts/installers/full-setup.sh');
   if (!fs.existsSync(sh)) { console.log('[claudex] setup script missing'); process.exit(1); }
   require('node:child_process').spawnSync('bash', [sh], { stdio: 'inherit' });
+}
+
+async function cmdSession(args){
+  const action = args[0] || 'show';
+  const value = args[1];
+  const envPath = path.join(process.cwd(), 'claudex', '.env');
+  if (action === 'show') {
+    console.log('CODEX_SESSION_ID=', getEnv('CODEX_SESSION_ID', 'sess_2025-09-13_01'));
+    return;
+  }
+  if (action === 'set') {
+    if (!value) { console.log('Usage: session set <sessionId>'); process.exit(1); }
+    ensureDir(path.dirname(envPath));
+    let text = fs.existsSync(envPath) ? fs.readFileSync(envPath, 'utf8') : '';
+    if (/^CODEX_SESSION_ID=/m.test(text)) text = text.replace(/^CODEX_SESSION_ID=.*/m, `CODEX_SESSION_ID=${value}`);
+    else text += (text.endsWith('\n')?'' : '\n') + `CODEX_SESSION_ID=${value}\n`;
+    fs.writeFileSync(envPath, text);
+    console.log(`[claudex] Updated CODEX_SESSION_ID=${value} in ${envPath}`);
+    return;
+  }
+  console.log('Usage: session [show|set <sessionId>]');
 }

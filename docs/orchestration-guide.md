@@ -19,6 +19,9 @@ Environment
 
 MCP Servers (Codex)
 - `.codex/config.toml` → memory server and prompt optimizer wired to `claudex/mcp/*.mjs`
+- Memory MCP loads env from `claudex/.env` and supports session tools:
+  - Tools: `get_session_id`, `set_session_id`
+  - Env: `MEMORY_HTTP_URL`, `MEMORY_HTTP_TOKEN`, `CODEX_SESSION_ID`, optional `SUPABASE_URL`, `SUPABASE_SERVICE_KEY` (used by backend Memory HTTP when driver=supabase)
 
 HTTP Endpoints (Memory HTTP)
 - GET /health → { ok: true }
