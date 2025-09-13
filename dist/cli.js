@@ -1,2 +1,2 @@
 #!/usr/bin/env node
-require('./claudex.cjs');
+require('./claudex.cjs')

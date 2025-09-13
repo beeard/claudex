@@ -81,9 +81,9 @@ console.log('[claudex] Scripts updated in package.json');
 NODE
 
 # Install runtime deps for full functionality (sqlite, supabase optional)
-echo "[claudex] Installing runtime deps (better-sqlite3, commander, inquirer, chalk, dotenv, @supabase/supabase-js)"
+echo "[claudex] Installing runtime deps (better-sqlite3, commander, inquirer, chalk, dotenv, @supabase/supabase-js, @proffbemanning/db-memory)"
 npm pkg set engines.node=">=18" >/dev/null 2>&1 || true
-npm i --silent better-sqlite3 commander inquirer chalk dotenv @supabase/supabase-js >/dev/null 2>&1 || true
+npm i --silent better-sqlite3 commander inquirer chalk dotenv @supabase/supabase-js @proffbemanning/db-memory >/dev/null 2>&1 || true
 
 # Start memory HTTP if unhealthy and verify
 echo "[claudex] Verifying Memory HTTP at ${MEMORY_HTTP_URL} (driver=${MEMORY_HTTP_DRIVER})"

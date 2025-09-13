@@ -16,3 +16,6 @@ yarn.lock
 .env
 *.swp
 *.swo
+# Ignore any local monorepo drops
+db-memory/
+db-memory/**
