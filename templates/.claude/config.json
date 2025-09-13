@@ -1,0 +1,10 @@
+{
+  "project": "claudex-template",
+  "memory": {
+    "enabled": true,
+    "defaults": {
+      "sessionId": "sess_2025-09-13_01"
+    }
+  }
+}
+

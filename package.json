@@ -1,0 +1,41 @@
+{
+  "name": "claudex",
+  "version": "0.1.0",
+  "description": "Standalone orchestration kit + interactive installer (SQLite + Supabase memory, tmux dashboard)",
+  "license": "MIT",
+  "type": "commonjs",
+  "bin": {
+    "orchestrator-kit": "dist/cli.js"
+  },
+  "files": [
+    "dist/",
+    "templates/",
+    "docs/",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "esbuild cli/src/cli.ts --bundle --platform=node --target=node18 --format=cjs --outfile=dist/claudex.cjs && node -e \"const fs=require('fs');fs.writeFileSync('dist/cli.js','#!/usr/bin/env node\\nrequire(\\'./claudex.cjs\\')');fs.chmodSync('dist/cli.js',0o755)\"",
+    "pack": "mkdir -p dist && tar -czf dist/claudex-$(node -p -e \"require('./package.json').version\").tgz dist templates docs README.md LICENSE",
+    "validate": "node dist/claudex.cjs verify",
+    "dashboard:quick": "node dist/claudex.cjs dashboard",
+    "dashboard:quick:mem-off": "ENABLE_MEM_HTTP=0 node dist/claudex.cjs dashboard",
+    "dashboard:with-memory": "ENABLE_MEM_HTTP=1 node dist/claudex.cjs dashboard",
+    "monitor:with-memory": "ENABLE_MEM_HTTP=1 node dist/claudex.cjs monitor",
+    "verify:orchestration": "node dist/claudex.cjs verify"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "@supabase/supabase-js": "^2.46.1",
+    "better-sqlite3": "^9.6.0",
+    "chalk": "^5.3.0",
+    "commander": "^12.1.0",
+    "dotenv": "^16.4.5",
+    "esbuild": "^0.23.0",
+    "inquirer": "^9.3.7"
+  }
+}
+
