@@ -11,6 +11,6 @@ if ! command -v tmux >/dev/null 2>&1; then
   exec node dist/claudex.cjs monitor
 fi
 
-scripts/tmux/init.sh
+DIR="$(cd "$(dirname "$0")" && pwd)"
+"$DIR/init.sh"
 tmux attach -t "${SESSION:-distributed-system}"
-

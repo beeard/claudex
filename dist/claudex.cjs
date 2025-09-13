@@ -211,7 +211,7 @@ function safeJSON(x) { try { return typeof x === 'string' ? JSON.parse(x) : x; }
 
 // -------- CLI commands --------
 function usage() {
-  console.log(`claudex v0.1.0\n\nCommands:\n  init                      Interactive installer (copy templates, add scripts)\n  dashboard                 Launch dashboard (tmux if available; starts memory if needed)\n  monitor                   Console live monitor (health/stats)\n  verify                    Verify infrastructure (/health + /tools/get_stats)\n  orchestrate <task> [strategy] [agents] [priority]  Log dispatch + update index\n  serve-memory-http         Start embedded Memory HTTP server\n\nOptions env: MEMORY_HTTP_DRIVER, MEMORY_HTTP_URL, MEMORY_HTTP_TOKEN, MEMORY_DUAL_WRITE, CODEX_SESSION_ID`);
+  console.log(`claudex v0.1.0\n\nCommands:\n  init                      Interactive installer (copy templates, add scripts)\n  setup                     Full setup (installer script; MCP + templates + deps)\n  dashboard                 Launch dashboard (tmux if available; starts memory if needed)\n  monitor                   Console live monitor (health/stats)\n  verify                    Verify infrastructure (/health + /tools/get_stats)\n  orchestrate <task> [strategy] [agents] [priority]  Log dispatch + update index\n  serve-memory-http         Start embedded Memory HTTP server\n\nOptions env: MEMORY_HTTP_DRIVER, MEMORY_HTTP_URL, MEMORY_HTTP_TOKEN, MEMORY_DUAL_WRITE, CODEX_SESSION_ID`);
 }
 
 async function cmdInit() {
@@ -346,6 +346,7 @@ async function fetchJson(u, opts) { const r = await fetch(u, opts); const t = aw
   const [,,cmd, ...args] = process.argv;
   if (!cmd || cmd === '--help' || cmd === '-h') return usage();
   if (cmd === 'init') return cmdInit();
+  if (cmd === 'setup') return cmdSetup();
   if (cmd === 'dashboard') return cmdDashboard();
   if (cmd === 'monitor') return cmdMonitor();
   if (cmd === 'verify') return cmdVerify();
@@ -354,3 +355,8 @@ async function fetchJson(u, opts) { const r = await fetch(u, opts); const t = aw
   console.log('[claudex] Unknown command:', cmd); usage();
 })();
 
+async function cmdSetup(){
+  const sh = path.join(__dirname, '../scripts/installers/full-setup.sh');
+  if (!fs.existsSync(sh)) { console.log('[claudex] setup script missing'); process.exit(1); }
+  require('node:child_process').spawnSync('bash', [sh], { stdio: 'inherit' });
+}

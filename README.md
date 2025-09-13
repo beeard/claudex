@@ -5,10 +5,12 @@ Overview
 - NPM bin: `orchestrator-kit` → `dist/cli.js`
 - Memory HTTP server with drivers: SQLite (default) and Supabase (optional), token-auth, /health + /tools/* endpoints
 - tmux dashboard helpers, monitoring, verify scripts, intelligent orchestrator dispatch (log only), structured JSONL logs + per-run reports, run index
+- MCP servers (templates): memory-http bridge + prompt-optimizer (via `@modelcontextprotocol/sdk`) wired in `.codex/config.toml`
 
 Quick Start
 - Help: `node dist/claudex.cjs --help`
-- Install into a host repo: `node dist/claudex.cjs init`
+- Full setup into a host repo: `node dist/claudex.cjs setup` (installs `.codex/config.toml`, copies templates, installs deps, verifies Memory HTTP)
+- Install templates only: `node dist/claudex.cjs init`
 - Dashboard with memory: `npm run dashboard:with-memory`
 - Monitor: `npm run monitor:with-memory`
 - Verify infra: `npm run verify:orchestration`
@@ -31,4 +33,4 @@ Notes
 - If `tmux` is missing, dashboard commands degrade gracefully and print instructions.
 - SQLite is default. Supabase dual-write is supported via env.
 - The CLI can auto-start the Memory HTTP server if unhealthy.
-
+- Codex MCP: `.codex/config.toml` points to `node claudex/mcp/memory-http-mcp.server.mjs` and `node claudex/mcp/prompt-optimizer-mcp.server.mjs`

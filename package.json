@@ -10,6 +10,7 @@
   "files": [
     "dist/",
     "templates/",
+    "scripts/",
     "docs/",
     "README.md",
     "LICENSE"
@@ -21,6 +22,7 @@
     "build": "esbuild cli/src/cli.ts --bundle --platform=node --target=node18 --format=cjs --outfile=dist/claudex.cjs && node -e \"const fs=require('fs');fs.writeFileSync('dist/cli.js','#!/usr/bin/env node\\nrequire(\\'./claudex.cjs\\')');fs.chmodSync('dist/cli.js',0o755)\"",
     "pack": "mkdir -p dist && tar -czf dist/claudex-$(node -p -e \"require('./package.json').version\").tgz dist templates docs README.md LICENSE",
     "validate": "node dist/claudex.cjs verify",
+    "setup": "bash scripts/installers/full-setup.sh",
     "dashboard:quick": "node dist/claudex.cjs dashboard",
     "dashboard:quick:mem-off": "ENABLE_MEM_HTTP=0 node dist/claudex.cjs dashboard",
     "dashboard:with-memory": "ENABLE_MEM_HTTP=1 node dist/claudex.cjs dashboard",
@@ -38,4 +40,3 @@
     "inquirer": "^9.3.7"
   }
 }
-

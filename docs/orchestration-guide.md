@@ -1,7 +1,8 @@
 Orchestration Guide (claudex)
 
 Quick Starts
-- Init in current repo: `node dist/claudex.cjs init`
+- Full setup (installs MCP servers + templates): `node dist/claudex.cjs setup`
+- Init in current repo (templates only): `node dist/claudex.cjs init`
 - Start dashboard (with memory): `npm run dashboard:with-memory`
 - Monitor health/stats: `npm run monitor:with-memory`
 - Verify infrastructure: `npm run verify:orchestration`
@@ -16,7 +17,10 @@ Environment
 - SUPABASE_SERVICE_KEY= (optional)
 - CODEX_SESSION_ID=sess_2025-09-13_01 (default continuity)
 
-Endpoints
+MCP Servers (Codex)
+- `.codex/config.toml` → memory server and prompt optimizer wired to `claudex/mcp/*.mjs`
+
+HTTP Endpoints (Memory HTTP)
 - GET /health → { ok: true }
 - POST /tools/search_memories → { items: [...] }
 - POST /tools/store_memory → { ok: true, id }
@@ -30,4 +34,3 @@ Logs & Reports
 - JSONL logs: `logs/orchestration/events.jsonl`
 - Per-run: `reports/orchestration/<runId>/`
 - Run index: `reports/orchestration/index.json` (also mirrored to `reports/orchestroration/index.json`)
-

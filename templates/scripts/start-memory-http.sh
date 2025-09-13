@@ -9,20 +9,19 @@ health() {
   curl -sS "$MEM_URL/health" >/dev/null 2>&1
 }
 
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+CLAUDEX_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+PROJECT_ROOT="$(cd "$CLAUDEX_DIR/.." && pwd)"
+
 echo "[claudex] Checking Memory HTTP at $MEM_URL ..."
 if ! health; then
   echo "[claudex] Starting embedded Memory HTTP server (driver=$DRIVER) ..."
-  # Prefer compiled server if present; fallback prints helpful note
-  if [ -f "templates/services/memory-http/build/http-server.cjs" ]; then
-    node templates/services/memory-http/build/http-server.cjs &
+  # Defer to CLI embedded server if available
+  if [ -f "$PROJECT_ROOT/dist/claudex.cjs" ]; then
+    (cd "$PROJECT_ROOT" && node dist/claudex.cjs serve-memory-http &)
   else
-    # Defer to CLI embedded server if available
-    if [ -f "dist/claudex.cjs" ]; then
-      node dist/claudex.cjs serve-memory-http &
-    else
-      echo "[claudex] No server binary found. Ensure dist/claudex.cjs exists."
-      exit 1
-    fi
+    echo "[claudex] No server binary found at $PROJECT_ROOT/dist/claudex.cjs"
+    exit 1
   fi
   # Wait for health
   for i in {1..30}; do
@@ -35,4 +34,3 @@ if ! health; then
 fi
 
 echo "[claudex] Memory HTTP ready at $MEM_URL"
-

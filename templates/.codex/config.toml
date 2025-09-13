@@ -1,0 +1,8 @@
+[servers.memory_server]
+command = "node"
+args = ["claudex/mcp/memory-http-mcp.server.mjs"]
+
+[servers.prompt_optimizer]
+command = "node"
+args = ["claudex/mcp/prompt-optimizer-mcp.server.mjs"]
+
